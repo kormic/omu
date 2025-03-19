@@ -1,3 +1,4 @@
+import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import { User, AuthError } from "firebase/auth/react-native";
 import { useState } from "react";
@@ -8,12 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { initialize } from "./config/firebase";
+import { initialize } from "../../config/firebase";
 
 const { signInWithEmailAndPassword, auth, onAuthStateChanged, signOut } =
   initialize();
 
-export default function App() {
+function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<User | null>(null);
@@ -67,3 +68,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+registerRootComponent(App);

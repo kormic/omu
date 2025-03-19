@@ -15,3 +15,7 @@ fire**-debug.log
 
 # macOS
 .DS_Store
+
+# firebase
+firebase_data/
+.firebaserc
