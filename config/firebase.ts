@@ -19,8 +19,11 @@ export function initialize() {
   const firestore = getFirestore();
 
   if (__DEV__) {
-    connectAuthEmulator(auth, 'http://localhost:9099');
-    connectFirestoreEmulator(firestore, 'localhost', 8080);
+    const normalizeUrl = Constants.experienceUrl.replace('exp://', 'http://');
+    const url = new URL(normalizeUrl);
+
+    connectAuthEmulator(auth, `http://${url.hostname}:9099`);
+    connectFirestoreEmulator(firestore, Constants.experienceUrl, 8080);
   }
 
   return {
