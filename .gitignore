@@ -18,4 +18,5 @@ fire**-debug.log
 
 # firebase
 firebase_data/
+firebase-export*
 .firebaserc
