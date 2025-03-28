@@ -22,9 +22,11 @@ module.exports = {
     },
     assetBundlePatterns: ['**/*'],
     ios: {
+      bundleIdentifier: 'com.komicgr.omu',
       supportsTablet: true,
     },
     android: {
+      package: 'com.komicgr.omu',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#FFFFFF',
