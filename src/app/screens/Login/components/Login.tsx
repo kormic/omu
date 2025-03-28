@@ -78,7 +78,7 @@ export default function Login() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#1E1E1E',
-        padding: 20
+        padding: 10
     },
     header: {
         flexDirection: 'row',
