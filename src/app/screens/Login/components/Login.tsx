@@ -8,10 +8,10 @@ import {
     View,
     Image,
 } from "react-native";
-import { initialize } from "../../../../../config/firebase";
+import { initializeFirebase } from "../../../../../config/firebase";
 
 const { signInWithEmailAndPassword, auth, onAuthStateChanged, signOut } =
-    initialize();
+    initializeFirebase();
 
 export default function Login() {
     const [email, setEmail] = useState("");
