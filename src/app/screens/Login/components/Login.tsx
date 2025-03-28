@@ -54,14 +54,14 @@ export default function Login() {
             <View style={styles.loginForm}>
                 <TextInput
                     placeholder="Email / Phone number / Username"
-                    style={styles.username}
+                        style={[styles.text, styles.username]}
                     placeholderTextColor={'#969696'}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
                 />
                 <TextInput
-                    style={styles.password}
+                        style={[styles.text, styles.password]}
                     placeholder="Password"
                     placeholderTextColor={'#969696'}
                     value={password}
