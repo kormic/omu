@@ -1,6 +1,7 @@
 import { AuthError } from "firebase/auth/react-native";
 import { useState } from "react";
 import {
+    Alert,
     StyleSheet,
     Text,
     TextInput,
@@ -16,12 +17,23 @@ const { signInWithEmailAndPassword, auth, onAuthStateChanged, signOut } =
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [_, setError] = useState<string | null>(null);
 
     const handleLogin = async () => {
-        signInWithEmailAndPassword(auth, email, password).catch((e: AuthError) => {
-            setError(e.message);
-        });
+        try {
+            const { user } = await signInWithEmailAndPassword(auth!, email, password)
+            Alert.alert("Welcome", user.displayName ?? "User", [{
+                text: "OK",
+                onPress: () => console.log("Logged in"),
+                style: "default"
+            }]);
+        } catch (error) {
+            const { name, message, code } = error as AuthError;
+            Alert.alert(name, message ?? "An error occured", [{
+                text: "Dismiss",
+                onPress: () => console.log("Dismissed"),
+                style: "default"
+            }]);
+        }
     };
 
     return (
