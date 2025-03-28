@@ -35,23 +35,22 @@ export function initializeFirebase() {
       auth = initializeAuth(app, {
         persistence: getReactNativePersistence(AsyncStorage),
       });
-
-      if (__DEV__ && Constants.expoConfig?.hostUri) {
-        const hostUri = Constants.expoConfig.hostUri.split(':')[0];
-
-        connectAuthEmulator(auth!, `http://${hostUri}:9099`);
-        connectFirestoreEmulator(firestore!, hostUri, 8080);
-      }
+      firestore = getFirestore(app);
     } catch (error) {
       throw 'Error initializing firebase: ' + error;
+    }
+
+    if (__DEV__ && Constants.expoConfig?.hostUri) {
+      const hostUri = Constants.expoConfig.hostUri.split(':')[0];
+
+      connectAuthEmulator(auth, `http://${hostUri}:9099`);
+      connectFirestoreEmulator(firestore, hostUri, 8080);
     }
   }
 
   if (!app) {
     throw 'Error initializing firebase: app is undefined';
   }
-
-  firestore = getFirestore(app);
 
   return {
     app,
