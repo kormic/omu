@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { initializeApp } from 'firebase/app';
+import { FirebaseApp, getApp, getApps, initializeApp } from 'firebase/app';
 import {
   getReactNativePersistence,
   initializeAuth,
@@ -7,27 +7,54 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  getAuth,
+  Auth,
 } from 'firebase/auth/react-native';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import {
+  getFirestore,
+  connectFirestoreEmulator,
+  Firestore,
+} from 'firebase/firestore';
 import Constants from 'expo-constants';
 
-export function initialize() {
-  const firebaseApp = initializeApp(Constants.expoConfig?.extra?.firebase);
-  const auth = initializeAuth(firebaseApp, {
-    persistence: getReactNativePersistence(AsyncStorage),
-  });
-  const firestore = getFirestore();
+export function initializeFirebase() {
+  let app: FirebaseApp | undefined = undefined,
+    auth: Auth | undefined = undefined,
+    firestore: Firestore | undefined = undefined;
 
-  if (__DEV__) {
-    const normalizeUrl = Constants.experienceUrl.replace('exp://', 'http://');
-    const url = new URL(normalizeUrl);
+  const isFirebaseInitialized = getApps().length > 0;
 
-    connectAuthEmulator(auth, `http://${url.hostname}:9099`);
-    connectFirestoreEmulator(firestore, Constants.experienceUrl, 8080);
+  if (isFirebaseInitialized) {
+    app = getApp();
+    auth = getAuth(app);
   }
 
+  if (!isFirebaseInitialized) {
+    try {
+      app = initializeApp(Constants.expoConfig?.extra?.firebase);
+      auth = initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage),
+      });
+
+      if (__DEV__ && Constants.expoConfig?.hostUri) {
+        const hostUri = Constants.expoConfig.hostUri.split(':')[0];
+
+        connectAuthEmulator(auth!, `http://${hostUri}:9099`);
+        connectFirestoreEmulator(firestore!, hostUri, 8080);
+      }
+    } catch (error) {
+      throw 'Error initializing firebase: ' + error;
+    }
+  }
+
+  if (!app) {
+    throw 'Error initializing firebase: app is undefined';
+  }
+
+  firestore = getFirestore(app);
+
   return {
-    firebaseApp,
+    app,
     auth,
     onAuthStateChanged,
     signInWithEmailAndPassword,
