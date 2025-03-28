@@ -12,6 +12,8 @@ web-build/
 ui-debug.log
 fire**-debug.log
 .env
+ios
+android
 
 # macOS
 .DS_Store
