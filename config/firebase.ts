@@ -9,7 +9,7 @@ import {
 	signOut,
 	getAuth,
 	Auth,
-} from 'firebase/auth/react-native';
+} from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator, Firestore } from 'firebase/firestore';
 import Constants from 'expo-constants';
 
