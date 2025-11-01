@@ -1,17 +1,19 @@
 {
 	"name": "omu",
 	"version": "1.0.0",
-	"main": "src/app/App.tsx",
+	"main": "expo-router/entry",
 	"scripts": {
 		"start": "expo start",
 		"android": "expo start --android",
 		"ios": "expo start --ios",
 		"web": "expo start --web",
 		"lint": "eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"db:reset": "supabase db reset && node ./scripts/seed-users.js"
 	},
 	"dependencies": {
 		"@react-native-async-storage/async-storage": "2.1.2",
+		"@supabase/supabase-js": "^2.78.0",
 		"expo": "^53.0.12",
 		"expo-constants": "~17.1.6",
 		"expo-linking": "~7.1.5",
@@ -22,6 +24,7 @@
 		"react-native": "0.79.4",
 		"react-native-safe-area-context": "5.4.0",
 		"react-native-screens": "~4.11.1",
+		"react-native-url-polyfill": "^3.0.0",
 		"react-native-web": "^0.20.0"
 	},
 	"devDependencies": {

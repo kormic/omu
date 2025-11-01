@@ -1,4 +1,4 @@
-import { AuthError } from 'firebase/auth/react-native';
+import { supabase } from '../../../../config/supabase';
 import { useRef, useState } from 'react';
 import {
 	Alert,
@@ -7,41 +7,52 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
-	Image,
 	KeyboardAvoidingView,
 	TouchableWithoutFeedback,
 	Keyboard,
+	AppState,
 } from 'react-native';
-import { initializeFirebase } from '../../../../../config/firebase';
+import { useRouter } from 'expo-router';
+import Header from '../components/Header';
+import OmuButton from '../../../components/OmuButton';
 
-const { signInWithEmailAndPassword, auth } = initializeFirebase();
+// Tells Supabase Auth to continuously refresh the session automatically if
+// the app is in the foreground. When this is added, you will continue to receive
+// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
+// if the user's session is terminated. This should only be registered once.
+AppState.addEventListener('change', (state) => {
+	if (state === 'active') {
+		supabase.auth.startAutoRefresh();
+	} else {
+		supabase.auth.stopAutoRefresh();
+	}
+});
 
 export default function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const passwordInputRef = useRef<TextInput>(null);
+	const router = useRouter();
 
-	const handleLogin = async () => {
-		Keyboard.dismiss();
-		try {
-			const { user } = await signInWithEmailAndPassword(auth!, email, password);
-			Alert.alert('Welcome', user.displayName ?? 'User', [
+	async function signInWithEmail() {
+		const { data, error } = await supabase.auth.signInWithPassword({
+			email: email,
+			password: password,
+		});
+		if (error) Alert.alert(error.message);
+		if (data.user) {
+			Alert.alert('Welcome', data.user.email ?? 'User', [
 				{
 					text: 'OK',
-					onPress: () => console.log('Logged in'),
-					style: 'default',
-				},
-			]);
-		} catch (error) {
-			const { name, message } = error as AuthError;
-			Alert.alert(name, message ?? 'An error occured', [
-				{
-					text: 'Dismiss',
-					onPress: () => console.log('Dismissed'),
+					onPress: () => console.log('Logged in with Supabase'),
 					style: 'default',
 				},
 			]);
 		}
+	}
+
+	const handleRegister = () => {
+		router.push('/auth/register');
 	};
 
 	return (
@@ -52,22 +63,7 @@ export default function Login() {
 				}}
 			>
 				<KeyboardAvoidingView behavior="position" keyboardVerticalOffset={20}>
-					<View style={styles.header}>
-						<Image style={styles.logo} source={require('../../../../../assets/omu.png')}></Image>
-						<Text style={[styles.text, styles.headerTitle]}>Login</Text>
-						<View style={styles.logo}></View>
-					</View>
-					<View style={styles.welcomeContainer}>
-						<View style={styles.welcomeTextContainer}>
-							<Text style={[styles.text, styles.welcomeText]}>Welcome to JivApp</Text>
-							<Text style={styles.text}>I want to be a Taker</Text>
-							<Text style={styles.text}>I want to receive a Jiver</Text>
-						</View>
-						<Image
-							style={styles.welcomeImage}
-							source={require('../../../../../assets/jivers.png')}
-						></Image>
-					</View>
+					<Header title="Login" iconName="login" />
 					<View style={styles.loginForm}>
 						<TextInput
 							placeholder="Email"
@@ -94,14 +90,12 @@ export default function Login() {
 							<Text style={styles.text}>Forgot Password?</Text>
 						</TouchableOpacity>
 					</View>
-					<View style={styles.loginContainer}>
-						<TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-							<Text style={[styles.text, styles.loginText]}>Login</Text>
-						</TouchableOpacity>
+					<View style={styles.mainActionContainer}>
+						<OmuButton text="Login" onPressHandler={() => signInWithEmail()} />
 					</View>
-					<View style={styles.registerContainer}>
+					<View style={styles.secondaryActionContainer}>
 						<Text style={styles.text}>Don't have an account yet?</Text>
-						<TouchableOpacity style={styles.registerButton}>
+						<TouchableOpacity style={styles.secondaryAction} onPress={handleRegister}>
 							<Text style={styles.text}>Register here!</Text>
 						</TouchableOpacity>
 					</View>
@@ -116,39 +110,22 @@ const styles = StyleSheet.create({
 		backgroundColor: '#1E1E1E',
 		padding: 10,
 	},
-	header: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-	},
-	logo: {
-		aspectRatio: 1,
-		width: 40,
-	},
 	text: {
 		color: '#FFF',
 	},
-	headerTitle: {
-		fontSize: 16,
+	mainActionContainer: {
+		marginTop: 25,
 	},
-	welcomeContainer: {
-		padding: 35,
+	secondaryActionContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginTop: 35,
 	},
-	welcomeTextContainer: {
-		paddingBottom: 35,
-	},
-	welcomeText: {
-		paddingBottom: 12,
-	},
-	welcomeImage: {
-		backgroundColor: 'white',
-		alignSelf: 'center',
+	secondaryAction: {
+		paddingLeft: 5,
 	},
 	loginForm: {
 		gap: 12,
-	},
-	loginContainer: {
-		marginTop: 25,
 	},
 	loginButton: {
 		// paddingTop: 35,
@@ -180,13 +157,5 @@ const styles = StyleSheet.create({
 	},
 	forgotPassword: {
 		alignSelf: 'flex-end',
-	},
-	registerContainer: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		marginTop: 35,
-	},
-	registerButton: {
-		paddingLeft: 5,
 	},
 });

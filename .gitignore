@@ -10,15 +10,15 @@ npm-debug.*
 *.orig.*
 web-build/
 ui-debug.log
-fire**-debug.log
-.env
 ios
 android
 
 # macOS
 .DS_Store
 
-# firebase
-firebase_data/
-firebase-export*
-.firebaserc
+# Supabase
+.branches
+.temp
+
+# dotenvx
+.env*
