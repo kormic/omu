@@ -5,6 +5,7 @@ module.exports = {
 	expo: {
 		name: 'omu',
 		slug: 'omu',
+		scheme: 'omu',
 		version: '1.0.0',
 		orientation: 'portrait',
 		icon: './assets/icon.png',
@@ -33,5 +34,6 @@ module.exports = {
 		web: {
 			favicon: './assets/favicon.png',
 		},
+		plugins: ['expo-router'],
 	},
 };
