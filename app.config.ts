@@ -1,8 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const firebase = process.env.FIREBASE ? JSON.parse(process.env.FIREBASE) : {};
-
 module.exports = {
 	expo: {
 		name: 'omu',
@@ -34,9 +32,6 @@ module.exports = {
 		},
 		web: {
 			favicon: './assets/favicon.png',
-		},
-		extra: {
-			firebase: firebase,
 		},
 	},
 };
