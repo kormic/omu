@@ -17,11 +17,11 @@ export default function Register() {
 				<Text style={styles.text}>#JivAShit</Text>
 			</View>
 			<View style={styles.mainActionContainer}>
-				<OmuButton text="Continue" onPressHandler={() => {}} />
+				<OmuButton text="Continue" onPressHandler={() => router.replace('(auth)/register-form')} />
 			</View>
 			<View style={styles.secondaryActionContainer}>
 				<Text style={styles.text}>Already have an account yet?</Text>
-				<TouchableOpacity style={styles.secondaryAction} onPress={() => router.replace('/login')}>
+				<TouchableOpacity style={styles.secondaryAction} onPress={() => router.replace('(auth)/login')}>
 					<Text style={styles.text}>Login here!</Text>
 				</TouchableOpacity>
 			</View>

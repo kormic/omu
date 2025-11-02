@@ -31,6 +31,14 @@ export default function RootLayout() {
 							gestureEnabled: true,
 						}}
 					/>
+
+					<Stack.Screen
+						name="(auth)/register-form"
+						options={{
+							presentation: 'modal',
+							animation: 'slide_from_bottom',
+						}}
+					/>
 				</Stack>
 			</AuthProvider>
 		</SafeAreaView>

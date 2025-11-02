@@ -44,7 +44,7 @@ export default function Login() {
 			Alert.alert('Welcome', data.user.email ?? 'User', [
 				{
 					text: 'OK',
-					onPress: () => router.push('/home'),
+					onPress: () => router.replace('(app)/home'),
 					style: 'default',
 				},
 			]);
