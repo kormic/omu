@@ -44,7 +44,7 @@ export default function Login() {
 			Alert.alert('Welcome', data.user.email ?? 'User', [
 				{
 					text: 'OK',
-					onPress: () => console.log('Logged in with Supabase'),
+					onPress: () => router.push('/home'),
 					style: 'default',
 				},
 			]);
@@ -52,7 +52,7 @@ export default function Login() {
 	}
 
 	const handleRegister = () => {
-		router.push('/auth/register');
+		router.push('/register');
 	};
 
 	return (
